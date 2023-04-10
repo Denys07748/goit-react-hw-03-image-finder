@@ -5,6 +5,7 @@ import Searchbar from 'components/Searchbar/Searchbar';
 import Modal from 'components/Modal/Modal';
 import ImageGallery from 'components/ImageGallery/ImageGallery';
 import Button from 'components/Button/Button';
+import Loader from 'components/Loader/Loader';
 
 class App extends Component {
   state = {
@@ -14,16 +15,13 @@ class App extends Component {
     {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
     {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
   ],
+    images: null,
     showModal: false,
+    loading: true,
   }
 
   componentDidMount() {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
-
-    if(parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
+    // this.setState({ loading: true });
   }
 
   componentDidUpdate(prevPors, prevState) {
@@ -59,33 +57,16 @@ class App extends Component {
     console.log(imageData);
   }
 
-  // changeFilter = e => {
-  //   this.setState({filter: e.currentTarget.value})
-  // };
-
-  // getVisibleContacts = () => {
-  //   const {filter, contacts} = this.state;
-  //   const normalizedFilter = filter.toLowerCase();
-
-  //   return contacts.filter(({name}) => 
-  //     name.toLowerCase().includes(normalizedFilter)
-  //   );
-  // };
-
-  // deleteContact = contactId => {
-  //   this.setState(prevState => ({
-  //     contacts: prevState.contacts.filter(({id}) => id !== contactId),
-  //   }));
-  // };
-
   render() {
-    const { showModal } = this.state;
+    const { images, showModal, loading } = this.state;
 
     return (
       <Container>
         <Searchbar onSubmit={this.searchImages}/>
-        <ImageGallery images={this.state.contacts}/>
-        {/* <Loader/> */}
+        {images && (
+          <ImageGallery images={this.state.contacts}/>
+        )}
+        {loading && <Loader/>}
         <Button/>
         <button type='button' onClick={this.toggleModal}>open/close</button>
         {showModal && (
