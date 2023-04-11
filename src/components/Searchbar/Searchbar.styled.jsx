@@ -47,18 +47,6 @@ export const SearchForm = styled(Form)`
             opacity: 1;
         }
 
-        span  {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            clip-path: inset(50%);
-            border: 0;
-        }
-
         svg {
             width: 20px;
             height: 20px;
@@ -68,13 +56,15 @@ export const SearchForm = styled(Form)`
 
     input {
         display: inline-block;
-        width: 100%;
+        width: 95%;
+        height: 90%;
         font: inherit;
         font-size: 20px;
         border: none;
         outline: none;
         padding-left: 4px;
         padding-right: 4px;
+        margin-left: 10px;
 
         ::placeholder {
             font: inherit;

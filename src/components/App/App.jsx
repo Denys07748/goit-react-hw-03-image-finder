@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-// import { nanoid } from 'nanoid';
+import { ToastContainer } from 'react-toastify';
 import { Container } from './App.styled';
+import * as API from '../services/Api';
 import Searchbar from 'components/Searchbar/Searchbar';
 import Modal from 'components/Modal/Modal';
 import ImageGallery from 'components/ImageGallery/ImageGallery';
@@ -9,25 +10,27 @@ import Loader from 'components/Loader/Loader';
 
 class App extends Component {
   state = {
-    contacts: [
-    {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
-    {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
-    {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
-    {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
-  ],
-    images: null,
+    imagesArray: [],
+    value: '',
     showModal: false,
     loading: true,
   }
 
   componentDidMount() {
-    // this.setState({ loading: true });
+    
   }
 
   componentDidUpdate(prevPors, prevState) {
     if(this.state.contacts !== prevState.contacts) {
       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
     }
+  }
+
+  getImages = async (query, page) => {
+      const images = await API.getImages(query, page);
+      console.log(images);
+      // this.setState(state => ({imagesArray: [...state.imagesArray, ...images]}));
+      // console.log(this.state.imagesArray);
   }
 
   toggleModal = () => {
@@ -53,8 +56,10 @@ class App extends Component {
   //   }))
   // };
 
-  searchImages = imageData => {
-    console.log(imageData);
+  getValue = async ({value}) => {
+    await this.setState({value});
+    console.log(this.state.value);
+    this.getImages(this.state.value, 1);
   }
 
   render() {
@@ -62,9 +67,9 @@ class App extends Component {
 
     return (
       <Container>
-        <Searchbar onSubmit={this.searchImages}/>
+        <Searchbar onSubmit={this.getValue}/>
         {images && (
-          <ImageGallery images={this.state.contacts}/>
+          <ImageGallery images={images}/>
         )}
         {loading && <Loader/>}
         <Button/>
@@ -72,6 +77,7 @@ class App extends Component {
         {showModal && (
           <Modal onClose={this.toggleModal} />
         )}
+        <ToastContainer autoClose={3000}/>
       </Container>
     );
   }

@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { Formik, Field } from 'formik';
+import * as yup from "yup";
 import { SearchbarEl, SearchForm } from './Searchbar.styled';
 import { FaSearch } from 'react-icons/fa';
 
-const initialValues = {
-    value: '',
-};
+
+const schema = yup.object().shape({
+    value: yup.string().required(),
+});
 
 const Searchbar = ({onSubmit}) => {
     const handleSubmit = (values, {resetForm}) => {
@@ -17,7 +19,10 @@ const Searchbar = ({onSubmit}) => {
 
    return (
         <SearchbarEl>
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Formik 
+                initialValues={{value: ''}} 
+                validationSchema={schema}
+                onSubmit={handleSubmit}>
                 <SearchForm autoComplete="off" autoFocus>
                     <button type="submit" aria-label="Search">
                         <FaSearch/>
