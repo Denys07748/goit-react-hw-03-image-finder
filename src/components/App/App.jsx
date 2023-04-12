@@ -1,87 +1,70 @@
 import React, { Component } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Container } from './App.styled';
 import * as API from '../services/Api';
 import Searchbar from 'components/Searchbar/Searchbar';
-import Modal from 'components/Modal/Modal';
 import ImageGallery from 'components/ImageGallery/ImageGallery';
 import Button from 'components/Button/Button';
 import Loader from 'components/Loader/Loader';
 
 class App extends Component {
   state = {
-    imagesArray: [],
+    imagesData: [],
     value: '',
-    showModal: false,
-    loading: true,
+    page: 1,
+    isLoading: false,
+    totalImages: 0,
   }
 
-  componentDidMount() {
-    
-  }
+  componentDidUpdate(_, prevState) {
+    const { value, page } = this.state
 
-  componentDidUpdate(prevPors, prevState) {
-    if(this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
+     if (prevState.value !== value) {
+      this.setState({ imagesData: [], totalImages: 0, });
+      this.getImages(value, page);
+     }
   }
 
   getImages = async (query, page) => {
+    try {
+      this.setState({isLoading: true})
       const images = await API.getImages(query, page);
-      console.log(images);
-      // this.setState(state => ({imagesArray: [...state.imagesArray, ...images]}));
-      // console.log(this.state.imagesArray);
+      if(images.total === 0) {
+        this.setState({isLoading: false});
+        toast.error('Sorry, there are no images matching your search query. Please try again.');
+      } else {
+        this.setState(state => 
+        ({ imagesData: [...state.imagesData, ...images.hits], 
+           page: page+1,
+           totalImages: images.total }));
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      this.setState({isLoading: false});
+    }   
   }
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
-  };
-
-  // addContact = contactData => {
-  //   const isIncludes = this.state.contacts.some(({name}) => name.toLowerCase() === contactData.name.toLowerCase()); 
-  //   if(isIncludes) {
-  //     alert(`${contactData.name} is already in contacts`);
-  //     return;
-  //   }
-
-  //   const newContact = {
-  //     id: nanoid(10),
-  //     ...contactData,
-  //   }
-  
-  //   this.setState(({ contacts }) => ({
-  //     contacts: [newContact, ...contacts],
-  //   }))
-  // };
-
-  getValue = async ({value}) => {
-    await this.setState({value});
-    console.log(this.state.value);
-    this.getImages(this.state.value, 1);
-  }
+  handleSearch = (value) => {
+    this.setState({ value, page: 1 })
+  } 
 
   render() {
-    const { images, showModal, loading } = this.state;
+    const { imagesData, isLoading, value, page, totalImages } = this.state;
 
     return (
       <Container>
-        <Searchbar onSubmit={this.getValue}/>
-        {images && (
-          <ImageGallery images={images}/>
-        )}
-        {loading && <Loader/>}
-        <Button/>
-        <button type='button' onClick={this.toggleModal}>open/close</button>
-        {showModal && (
-          <Modal onClose={this.toggleModal} />
-        )}
-        <ToastContainer autoClose={3000}/>
+        <Searchbar onSubmit={this.handleSearch}/>
+        {imagesData.length > 0 && 
+        (<ImageGallery images={imagesData}/>)}
+        {imagesData !== totalImages && !isLoading && imagesData.length > 0 &&
+            <Button onLoadMore={() => this.getImages(value, page)}/>}
+        {isLoading && <Loader/>}
+        <ToastContainer autoClose={3000} theme="colored"/>
       </Container>
     );
   }
-  
 };
 
 export default App;

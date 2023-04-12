@@ -11,8 +11,8 @@ const schema = yup.object().shape({
 
 const Searchbar = ({onSubmit}) => {
     const handleSubmit = (values, {resetForm}) => {
-        console.log(values);
-        onSubmit(values);
+        const value = values.value.trim();
+        onSubmit(value);
         resetForm();
     };
 
