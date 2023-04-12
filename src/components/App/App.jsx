@@ -63,7 +63,7 @@ class App extends Component {
         <Searchbar onSubmit={this.handleSearch}/>
         {imagesData.length > 0 && 
         (<ImageGallery images={imagesData}/>)}
-        {imagesData !== totalImages && !isLoading && imagesData.length > 0 &&
+        {imagesData.length !== totalImages && !isLoading && imagesData.length > 0 &&
             <Button onLoadMore={() => this.getImages(value, page)}/>}
         {isLoading && <Loader/>}
         <ToastContainer autoClose={3000} theme="colored"/>
