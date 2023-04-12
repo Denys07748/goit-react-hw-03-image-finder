@@ -20,8 +20,13 @@ class App extends Component {
   componentDidUpdate(_, prevState) {
     const { value, page } = this.state
 
+    if(value === '') {
+      toast.warn('The input field cannot be empty.');
+      return;
+    }
+
      if (prevState.value !== value) {
-      this.setState({ imagesData: [], totalImages: 0, });
+      this.setState({ imagesData: [], totalImages: 0 });
       this.getImages(value, page);
      }
   }

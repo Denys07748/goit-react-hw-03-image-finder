@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Formik, Field } from 'formik';
 import * as yup from "yup";
+import 'react-toastify/dist/ReactToastify.css';
 import { SearchbarEl, SearchForm } from './Searchbar.styled';
 import { FaSearch } from 'react-icons/fa';
 
@@ -12,6 +13,7 @@ const schema = yup.object().shape({
 const Searchbar = ({onSubmit}) => {
     const handleSubmit = (values, {resetForm}) => {
         const value = values.value.trim();
+        
         onSubmit(value);
         resetForm();
     };
