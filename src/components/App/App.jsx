@@ -41,7 +41,7 @@ class App extends Component {
       } else {
         this.setState(state => 
         ({ imagesData: [...state.imagesData, ...images.hits], 
-           page: page+1,
+           page: state.page+1,
            totalImages: images.total }));
       }
     } catch (error) {
