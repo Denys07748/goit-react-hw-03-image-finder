@@ -58,11 +58,11 @@ class App extends Component {
   }
 
   handleSearch = (value) => {
-    this.setState({ value, page: 1, imagesData: [] })
+    this.setState({ value, page: 1, imagesData: [] });   
   } 
 
   onLoadMore = () => {
-    this.setState(state => ({page: state.page + 1}))
+    this.setState(state => ({page: state.page + 1}));
   }
 
   onOpenModal = (largeImg, tag) => {
