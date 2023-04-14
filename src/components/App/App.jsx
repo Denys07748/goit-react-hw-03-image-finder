@@ -34,7 +34,7 @@ class App extends Component {
 
      if (prevState.value !== value || prevState.page !== page) {
       this.getImages(value, page);
-     }
+     } 
   }
 
   getImages = async (query, page) => {
@@ -58,6 +58,9 @@ class App extends Component {
   }
 
   handleSearch = (value) => {
+    if(this.state.value === value) {
+      return;
+    }
     this.setState({ value, page: 1, imagesData: [] });   
   } 
 
